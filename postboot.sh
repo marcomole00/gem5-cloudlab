@@ -12,11 +12,12 @@ sudo apt install -y build-essential git m4 scons zlib1g zlib1g-dev \
 # 2. Identify the CloudLab User
 USERCLOUDLAB=$(geni-get user_urn | awk -F'+' '{print $NF}')
 USER_HOME="/users/$USERCLOUDLAB"
+USER_GROUP=$(id -gn $USERCLOUDLAB)
 
 # 3. Copy Configuration (Ensure the source file exists)
 if [ -f "/local/repository/.tmux.conf" ]; then
     cp /local/repository/.tmux.conf "$USER_HOME/.tmux.conf"
-    chown "$USERCLOUDLAB":"$USERCLOUDLAB" "$USER_HOME/.tmux.conf"
+    chown "$USERCLOUDLAB":"$USER_GROUP" "$USER_HOME/.tmux.conf"
 fi
 
 # 4. Safely Append Environment Variables
@@ -33,4 +34,4 @@ add_to_bashrc "export RTE_SDK=\$GIT_ROOT/buildroot/package/dpdk/dpdk-source"
 
 # 5. Fix Permissions
 # Ensure the user owns their bashrc so they can edit it later
-chown "$USERCLOUDLAB":"$USERCLOUDLAB" "$BASHRC"
+chown "$USERCLOUDLAB":"$USER_GROUP" "$BASHRC"

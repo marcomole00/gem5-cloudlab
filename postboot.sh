@@ -1,4 +1,6 @@
 #!/bin/bash
+exec > /tmp/postboot_debug.log 2>&1  # Redirect STDOUT and STDERR to a file
+set -x                               # Print each command before executing it
 
 # 1. Update and Install Dependencies
 sudo apt update
@@ -12,8 +14,8 @@ USERCLOUDLAB=$(geni-get user_urn | awk -F'+' '{print $NF}')
 USER_HOME="/users/$USERCLOUDLAB"
 
 # 3. Copy Configuration (Ensure the source file exists)
-if [ -f ".tmux.conf" ]; then
-    cp .tmux.conf "$USER_HOME/.tmux.conf"
+if [ -f "/local/repository/.tmux.conf" ]; then
+    cp /local/repository/.tmux.conf "$USER_HOME/.tmux.conf"
     chown "$USERCLOUDLAB":"$USERCLOUDLAB" "$USER_HOME/.tmux.conf"
 fi
 
